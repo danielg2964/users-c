@@ -6,6 +6,7 @@
 #include "array.h"
 
 #define ARRAY_INITIAL_CAPACITY 256
+#define ARRAY_INITIAL_MAX_CAPACITY 1024
 
 Array *array_init(size_t pointer_size)
 {
@@ -29,6 +30,7 @@ Array *array_init(size_t pointer_size)
     array->pointer_size = pointer_size;
     array->capacity = ARRAY_INITIAL_CAPACITY;
     array->length = 0;
+    array->max_capacity = ARRAY_INITIAL_MAX_CAPACITY;
 
     return array;
 }
@@ -51,6 +53,10 @@ int array_append(Array *array, void *item)
 
     size_t array_memory_required = array->pointer_size * new_length;
 
+    if (new_length > array->max_capacity)
+    {
+        return 2;
+    }
     if (array_memory_required > array_memory_in_use)
     {
         void **realloc_result = realloc(array->items, array_memory_required);

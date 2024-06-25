@@ -4,21 +4,25 @@
 #include "array.h"
 #include "user.h"
 
-#define USER_COUNT 20
+#define USER_COUNT 1025
 
 int main()
 {
-    Array *array = array_init(sizeof(User *));
+    User *parent = user_init(0, "Name", "Last Name", NULL);
 
-    if (array == NULL)
+    if (parent == NULL)
     {
-        printf("Cannot allocate memory for array\n");
+        printf("Cannot create parent user\n");
         return 1;
     }
 
+    parent->parent = parent;
+
+    Array *array = parent->childs;
+
     for (int i = 0; i < USER_COUNT; i++)
     {
-        User *user = user_init(i, "Name", "Last Name");
+        User *user = user_init(i, "Name", "Last Name", parent);
 
         if (user == NULL)
         {
@@ -28,30 +32,23 @@ int main()
 
         int append_result = array_append(array, user);
 
-        if (append_result != 0)
+        if (append_result == 2)
+        {
+            printf("Max capacity has been reached!\n");
+            printf("Capacity: %d struct Users\n", array->capacity);
+        }
+        else if (append_result != 0)
         {
             printf("Cannot append user No. %d to array\n", i);
             user_free(user);
             user = NULL;
+            continue;
         }
 
-        int print_result = user_print(array_at(array, i));
-
-        if (print_result != 0)
-        {
-            printf("Cannot print user %d\n", i);
-        }
+        user_print(user);
     }
 
-    for (int i = 0; i < array->length; i++)
-    {
-        User *user = array_at(array, i);
-
-        user_free(user);
-        user = NULL;
-    }
-
-    array_free(array);
-    array = NULL;
+    user_free(parent);
+    parent = NULL;
     return 0;
 }

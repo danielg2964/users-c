@@ -1,6 +1,9 @@
+#pragma once
+
 typedef struct array_t
 {
     size_t capacity;
+    size_t max_capacity;
     size_t pointer_size;
     size_t length;
     void **items;
