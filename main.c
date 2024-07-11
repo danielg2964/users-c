@@ -35,7 +35,7 @@ int main()
         if (append_result == 2)
         {
             printf("Max capacity has been reached!\n");
-            printf("Capacity: %d struct Users\n", array->capacity);
+            printf("Capacity: %d Users\n", array->capacity);
         }
         else if (append_result != 0)
         {
@@ -44,8 +44,6 @@ int main()
             user = NULL;
             continue;
         }
-
-        user_print(user);
     }
 
     user_free(parent);

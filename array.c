@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <signal.h>
 
 #include "array.h"
-
-#define ARRAY_INITIAL_CAPACITY 256
-#define ARRAY_INITIAL_MAX_CAPACITY 1024
 
 Array *array_init(size_t pointer_size)
 {
@@ -17,7 +12,17 @@ Array *array_init(size_t pointer_size)
         return NULL;
     }
 
-    void **items = malloc(pointer_size * ARRAY_INITIAL_CAPACITY);
+    int initial_capacity = 256;
+#ifdef ARRAY_INITIAL_CAPACITY
+    initial_capacity = ARRAY_INITIAL_CAPACITY;
+#endif
+
+    int max_capacity = 1024;
+#ifdef ARRAY_INITIAL_MAX_CAPACITY
+    max_capacity = ARRAY_INITIAL_MAX_CAPACITY;
+#endif
+
+    void **items = calloc(initial_capacity, pointer_size);
 
     if (items == NULL)
     {
@@ -28,9 +33,9 @@ Array *array_init(size_t pointer_size)
 
     array->items = items;
     array->pointer_size = pointer_size;
-    array->capacity = ARRAY_INITIAL_CAPACITY;
+    array->capacity = initial_capacity;
     array->length = 0;
-    array->max_capacity = ARRAY_INITIAL_MAX_CAPACITY;
+    array->max_capacity = max_capacity;
 
     return array;
 }
